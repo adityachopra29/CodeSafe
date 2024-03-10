@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #for finding uninitialized variables and strcpy vulnerabilities
 
-
+import sys
 import re
 uninitialized = set()
 initialized = set()
@@ -36,7 +36,7 @@ def buffer_overflow_vulnerabilities(line,i):
     for word in words:
         
         if word[0:7]=='strcpy(' :
-            print("yes")
+            
             vulnerable_lines.append((i,line))
 
 
@@ -45,26 +45,27 @@ def detect_pointer_deref():
      
 
 def main():
-    filename = input("Enter the file name you want to find vulnerabilities: ")
+   
+    
+    
+    filename = sys.argv[1]
 
-    if filename.endswith('.c'):
+    try:
+            file = open(filename,'r')
+            lines = file.readlines()
+            i=0
+            for line in lines:
+                i=i+1
+                detect_uninitialized(line)
+                buffer_overflow_vulnerabilities(line,i)
 
-        try:
-            with open(filename, 'r') as file:
-                lines = file.readlines()
-                i=0
-                for line in lines:
-                    i=i+1
-                    detect_uninitialized(line)
-                    buffer_overflow_vulnerabilities(line,i)
-
-                for variable in variables:
-                    if variable in data_type_name_single:
-                        variable.remove(variable)
-                    if variable not in initialized:
-                        uninitialized.add(variable)
+            for variable in variables:
+                if variable in data_type_name_single:
+                    variable.remove(variable)
+                if variable not in initialized:
+                    uninitialized.add(variable)
        
-                print("uninitialized variables:", uninitialized)
+            print("uninitialized variables:", uninitialized)
                 
                 
             if vulnerable_lines:
@@ -74,11 +75,10 @@ def main():
             else:
                 print("No potential strcpy vulnerabilities found.")
 
-        except FileNotFoundError:
-             print("File not found. Please enter a valid file name.")
+    except FileNotFoundError:
+            print("File not found. Please enter a valid file name.")
     
-    else:
-        print("The entered file is not a c file")
+    
    
 if __name__=="__main__": 
     main() 
