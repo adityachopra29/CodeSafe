@@ -1,4 +1,6 @@
+#!/usr/bin/env python3
 #for finding uninitialized variables and strcpy vulnerabilities
+
 
 import re
 uninitialized = set()
