@@ -7,15 +7,13 @@ read filename_or_folder
 if [ -f "$filename_or_folder" ]; then
    
     filename="$filename_or_folder"
+  
     
-    
-    extension="${filename##*.}"
-    
-    if [ "$extension" == "c" ]; then
+    if [ "${filename: -2}" == ".c" ]; then
         # here list the python files that are finding vulnerabilities in C file
         python3 main.py "$filename"
         python3 unin.py "$filename"
-    elif [ "$extension" == "py" ]; then
+    elif [  "${filename: -3}" == ".py" ]; then
         # here list the python files that are finding vulnerabilities in python file
          echo "Python file"
     else
@@ -30,12 +28,13 @@ elif [ -d "$filename_or_folder" ]; then
            
             extension="${file##*.}"
             
-            if [ "$extension" == "c" ]; then
+            if [ "${filename: -2}" == ".c" ]; then
                 # here list the python files that are finding vulnerabilities in C file
                 echo "Vulnerabilities in $file"
                 python3 main.py "$file"
                 python3 unin.py "$file"
-            elif [ "$extension" == "py" ]; then
+                echo "------------------------------"
+            elif [ "${filename: -3}" == ".py" ]; then
                 # here list the python files that are finding vulnerabilities in python file
                 echo "Vulnerabilities in $file"
             else
