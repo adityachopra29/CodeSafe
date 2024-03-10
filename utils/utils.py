@@ -1,12 +1,4 @@
-from pickle import FALSE, TRUE
 import re
-from enum import Enum, auto
-import turtle
-
-# collectively these 3 are called Temp
-current_variables = {}
-current_pointers = {}
-current_functions = {}
 
 
 data_type_creators = ["struct", "#define", "enum", "typedef"]
@@ -21,27 +13,6 @@ data_type_name_quadruple = {"unsigned long long int"}
 
 data_type_list = [data_type_name_single, data_type_name_double,
                   data_type_name_triple, data_type_name_quadruple]
-
-# for list in data_type_list:
-#     list = [s.replace(' ', '_') for s in list]
-#     Data_type = Enum("Data_type", {data_type: auto() for data_type in list})
-#     print(Data_type)
-
-# for types in Data_type:
-#     print(types)
-# 
-# class Ptr:
-#     data_type=None
-#     name=None
-#     value=None
-
-# class Var:
-#     data_type=None
-#     name=None
-#     value=None
-
-# class Funct:
-#     pass
 
 def remove_last_word(s):
     words = s.split()
@@ -58,7 +29,7 @@ def remove_last_word(s):
 # check if that isTemp is not already defined
 #this thing will fuck on repetition (ie in functions)
 # in functions definitions, the variables defined in input wont be detected
-def check_for_type_written(line):
+def check_for_type_written(line, data_type_list):
     line = line.strip()
     words = re.split(" ", line)
 
@@ -80,8 +51,8 @@ def check_for_type_written(line):
     # s.replace(' ', '_')
     return [isTemp, i]
 
-def detect_variables_pointers_functions(line):
-    [isTemp, type_length] = check_for_type_written(line)
+def detect_variables_pointers_functions(line, current_functions, current_pointers, current_variables):
+    [isTemp, type_length] = check_for_type_written(line, data_type_list)
     line = line.strip()
     words = re.split(" ", line)
     s = None
@@ -131,45 +102,3 @@ def detect_variables_pointers_functions(line):
                 current_variables[temp] = initialized
                 s = {"Var":temp}
         return s
-
-def pointer_value_update(line):
-    line = line.strip()
-    words = re.split(" ", line)
-    if len(words) >= 3:
-        if words[0] in current_pointers and words[1] == '=' and words[2] != 'NULL':
-            current_pointers[words[0]] = True
-        elif words[0] in current_pointers and words[1] == '=' and words[2] == "NULL":
-            current_pointers[words[0]] = False
-    return 0
-
-def detect_pointer_deref(line, temp_in_line):
-    line = line.strip()
-    # simple dereferencing
-    for pointer_name in current_pointers.keys():
-        pattern = r".*\*"+pointer_name+".*"
-        sample = re.findall(pattern, line)
-        # print("sup ", sample)
-        if sample and temp_in_line != {"Ptr":pointer_name}:
-            # print("we here")
-            # means that pointer was not initialised in this line so dereferenced
-            if current_pointers[pointer_name] == False:
-                print("Null pointer dereference error")
-                return 0
-    return 0
-    
-
-def main():
-    file = open('./test.c', 'r')
-    lines = file.readlines()
-    for line in lines:
-        temp_in_line = detect_variables_pointers_functions(line)
-        pointer_value_update(line)
-        detect_pointer_deref(line, temp_in_line)
-
-    print("current vars", current_variables)
-    print("pointers", current_pointers)
-    print("functions", current_functions)
-
-
-if __name__ == "__main__":
-    main()
