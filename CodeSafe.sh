@@ -44,5 +44,5 @@ elif [ -d "$filename_or_folder" ]; then
     done
 
 else
-    echo "$filename_or_folder is neither a file nor a folder."
+    echo "$filename_or_folder doesn't exist."
 fi
