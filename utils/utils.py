@@ -42,7 +42,7 @@ def clean(s):
 
 # returns [bool, data_type_name]
 def check_for_type_written(line, data_type_list=data_type_list):
-    print(line)
+    # print(line)
     line = line.strip()
     words = re.split(" ", line)
 
@@ -93,7 +93,7 @@ def detect_variables_pointers_functions(line, current_functions, current_pointer
             # it is a function
             temp = temp.split("(")[0]
             if temp in current_functions:
-                print("Already defined function being reinitialized")
+                # print("Already defined function being reinitialized")
                 pass
             else:
                 current_functions[temp] = None
@@ -103,7 +103,7 @@ def detect_variables_pointers_functions(line, current_functions, current_pointer
             temp = temp[1:]
             # it is pointer'
             if temp in current_pointers:
-                print("Already defined pointer being reinitialized")
+                # print("Already defined pointer being reinitialized")
                 pass
             else:
                 if len(words) >= data_type_length+3: 
@@ -117,7 +117,7 @@ def detect_variables_pointers_functions(line, current_functions, current_pointer
         else:
             # it is a variable
             if temp in current_variables:
-                print("Already defined variable being reinitialized")
+                # print("Already defined variable being reinitialized")
                 pass
             else:
                 if len(words) >= data_type_length+3:

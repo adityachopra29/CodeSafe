@@ -4,12 +4,13 @@
 int main()
 {
    int x = 4;
-   // int y = NULL;
-   // int *p = 0;
-   // int v = 5 * *p;
+   int y = NULL;
+   int *p = 0;
+   int v = 5 * *p;
    // printf("Check %d", v);
    unsigned int t;
    t = -5;
+
    
    return 0;
 }

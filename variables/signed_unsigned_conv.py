@@ -4,21 +4,22 @@ from utils.utils import check_for_type_written
 
 # also takes care of signed unsigned conv
 # for line like -> t = -5;
-def integer_update_value(line, current_signed_int, current_unsigned_int):
+def integer_update_value(line, index, current_signed_int, current_unsigned_int):
     line = line.strip()
     words = re.split(" ", line)
     if len(words) >= 3:
         # print("we are in")
         # print(current_unsigned_int)
         if words[0] in current_unsigned_int and words[1] == '=' :
-            print(clean(words[2]))
+            # print(clean(words[2]))
             try : 
                 value = int(clean(words[2]))
                 if value < 0:
-                    print("Signed to Unsigned Conversion Error at line .. ")
+                    print("Signed to Unsigned Conversion Error at line", index)
                 
             except ValueError:
-                print("Not")
+                # print("Not")
+                pass
             current_unsigned_int[words[0]] = True
         elif words[0] in current_unsigned_int and words[1] == '=' and words[2] == "NULL":
             current_unsigned_int[words[0]] = False
