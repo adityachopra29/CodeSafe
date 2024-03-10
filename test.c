@@ -1,14 +1,13 @@
 #define NULL 0
 #include <stdio.h>
 
-// int funct(int a, int b)
-
 int main()
 {
-   int x = 4, y = NULL;
-   int *p = &x;
+   int x = 4;
+   int y = NULL;
+   int *p = 0;
    int v = 5 * *p;
-   printf("Hello nigga %d", v);
+   // printf("Check %d", v);
 
    return 0;
 }

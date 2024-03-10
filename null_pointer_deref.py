@@ -1,6 +1,7 @@
 from pickle import FALSE, TRUE
 import re
 from enum import Enum, auto
+import turtle
 
 # collectively these 3 are called Temp
 current_variables = {}
@@ -52,7 +53,7 @@ def remove_last_word(s):
     
     return new_s
 
-# Not considering pointers to functions
+# Not considering pointers of functions(call stack)
 # Not capable of handling loops
 # check if that isTemp is not already defined
 #this thing will fuck on repetition (ie in functions)
@@ -88,17 +89,18 @@ def detect_variables_pointers_functions(line):
     if isTemp:
         temp = words[type_length]
         # print(temp)
+        initialized=False
         # we will check here if the temp is already defined or not 
         #  also if us hi time pe kuch value assign kardi hai ya nahi
         if temp.endswith(';'):
             # Remove the semicolon from the end
             temp = temp[:-1]
+            initialized = False
         if '(' in temp:
             # it is a function
             temp = temp.split("(")[0]
             if temp in current_functions:
-                # update the value
-                print("some fuck has happened1")
+                print("Already defined function being reinitialized")
                 pass
             else:
                 current_functions[temp] = None
@@ -107,21 +109,26 @@ def detect_variables_pointers_functions(line):
             temp = temp[1:]
             # it is pointer'
             if temp in current_pointers:
-                # update the value
-                print("some fuck has happened2")
+                print("Already defined pointer being reinitialized")
                 pass
             else:
-                current_pointers[temp] = False
+                if words[type_length + 1] == '=':
+                    print(words[type_length + 2].replace(";", ""))
+                    if not any(words[type_length + 2].replace(";", "") == tmp for tmp in ["NULL", "0"]):
+                        initialized = True
+                current_pointers[temp] = initialized
                 s = {"Ptr":temp}
         else:
             # it is a variable
             if temp in current_variables:
-                # print(temp)
-                # update the value
-                print("some fuck has happened3")
+                print("Already defined variable being reinitialized")
                 pass
             else:
-                current_variables[temp] = None
+                if words[type_length + 1] == '=':
+                    print(words[type_length + 2].replace(";", ""))
+                    if not any(words[type_length + 2].replace(";", "") == tmp for tmp in ["NULL", "0"]):
+                        initialized = True
+                current_variables[temp] = initialized
                 s = {"Var":temp}
         return s
 
@@ -141,9 +148,9 @@ def detect_pointer_deref(line, temp_in_line):
     for pointer_name in current_pointers.keys():
         pattern = r".*\*"+pointer_name+".*"
         sample = re.findall(pattern, line)
-        print("sup bitch", sample)
+        # print("sup ", sample)
         if sample and temp_in_line != {"Ptr":pointer_name}:
-            print("we here")
+            # print("we here")
             # means that pointer was not initialised in this line so dereferenced
             if current_pointers[pointer_name] == False:
                 print("Null pointer dereference error")
