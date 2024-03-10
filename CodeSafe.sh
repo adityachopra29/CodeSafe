@@ -26,15 +26,15 @@ elif [ -d "$filename_or_folder" ]; then
     for file in "$folder"/*; do
         if [ -f "$file" ]; then
            
-            extension="${file##*.}"
+           
             
-            if [ "${filename: -2}" == ".c" ]; then
+            if [ "${file: -2}" == ".c" ]; then
                 # here list the python files that are finding vulnerabilities in C file
                 echo "Vulnerabilities in $file"
                 python3 main.py "$file"
                 python3 unin.py "$file"
                 echo "------------------------------"
-            elif [ "${filename: -3}" == ".py" ]; then
+            elif [ "${file: -3}" == ".py" ]; then
                 # here list the python files that are finding vulnerabilities in python file
                 echo "Vulnerabilities in $file"
             else
