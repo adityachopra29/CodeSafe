@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Enter filename or folder:"
+echo "Enter path to file or folder:"
 read filename_or_folder
 
 
@@ -12,10 +12,10 @@ if [ -f "$filename_or_folder" ]; then
     if [ "${filename: -2}" == ".c" ]; then
         # here list the python files that are finding vulnerabilities in C file
         python3 main.py "$filename"
-        python3 unin.py "$filename"
+
     elif [  "${filename: -3}" == ".py" ]; then
         # here list the python files that are finding vulnerabilities in python file
-         echo "Python file"
+         python3 pmain.py "$filename"
     else
         echo "$filename is neither a C nor a Python file."
     fi
@@ -32,11 +32,12 @@ elif [ -d "$filename_or_folder" ]; then
                 # here list the python files that are finding vulnerabilities in C file
                 echo "Vulnerabilities in $file"
                 python3 main.py "$file"
-                python3 unin.py "$file"
                 echo "------------------------------"
             elif [ "${file: -3}" == ".py" ]; then
                 # here list the python files that are finding vulnerabilities in python file
                 echo "Vulnerabilities in $file"
+                python3 pmain.py "$file"
+                echo "------------------------------"
             else
                 echo "$file is neither a C nor a Python file."
             fi
