@@ -9,4 +9,4 @@ To install CodeSafe, follow these steps:
 4. Enter the filename or foldername and provide the path to the folder you want to analyze.
 
 ## Note
-The test code should be in formatted.
+The test code should be formatted.
